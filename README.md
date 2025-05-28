@@ -1,3 +1,6 @@
+8xp files generated at
+https://www.cemetech.net/sc/
+
 ## Anova calculations:
 Files can be found at `anova-calculations/`
 
@@ -25,7 +28,7 @@ To run program: \
 in the 1st menu you can get info about the program
 
 in the 2nd menu you choose which value to change/input \
-press a number followed by [ENTER] to choose an operation
+press a number followed by [ENTER] to choose a variable to change or an operation to perform
 
 the 3rd menu allows you to view the calculations \
 Simply press the number coresponding to the data groups
