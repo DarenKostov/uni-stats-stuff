@@ -1,0 +1,287 @@
+
+
+
+//response/result
+0->W
+
+//t_alpha/2
+//1.73->X
+0->X
+
+//conf lvl
+//0.9->Y
+0->Y
+
+//unused variables
+// SZ
+
+Disp "ANOVA"
+
+Lbl DA
+ClrHome
+Menu("DAK's ANOVA","Continue",CO,"What is this?",WT,"License",LI,"Exit",EX)
+
+Lbl WT
+Disp "This program"
+Disp "does ANOVA"
+Disp "calculations"
+Pause "press [ENTER]"
+ClrHome
+Disp "L1 is for mu"
+Disp "L2 is for S^2"
+Disp "L3 is for n"
+Pause "press [ENTER]"
+Goto DA
+
+
+Lbl LI
+Disp "Copyright (C)"
+Disp "Daren Kostov"
+Disp "GPLv3"
+Disp "ABSOLUTELY NO"
+Disp "WARRANTY"
+Pause "press [ENTER]"
+ClrHome
+Disp "https://"
+Disp "github.com/"
+Disp "DarenKostov/"
+Disp "uni-stats-stuff"
+Pause "press [ENTER]"
+Goto DA
+
+
+
+Lbl CO
+If not(dim(L3)=dim(L2) and dim(L2)=dim(L1))
+Then
+	ClrHome
+	Disp "Lists are not of"
+	Disp "the same size!"
+	Disp "Check:"
+	Disp "2:What is this?"
+	Stop
+End
+	
+Lbl MM
+ClrHome
+Disp "INPUT VALUES"
+Disp "who"
+Disp "asked"
+Disp "?"
+
+Output(2,1,"1| t_alpha/2=")
+Output(2,10,X)
+Output(3,1,"2| CL=")
+Output(3,7,Y)
+Output(4,1,"3| Done & Calc.")
+Disp "4| Exit"
+
+
+Input "Select: ",W
+ClrHome
+If W=1
+Then
+	Input "t_alpha/2=",X
+	Goto MM
+End
+If W=2
+Then
+	Lbl CL
+	Input "Conf. Lvl.=",Y
+	If Y>1 or Y<0
+	Then
+		Disp "MUST be [0,1]"
+		Goto CL
+	End
+	Goto MM
+End
+If W=3
+Then
+	Goto CC
+End
+If W=4
+Then
+	Goto EX
+Else
+	Disp "No idea what"
+	Disp "you want :/"
+	Disp "Press [ENTER]"
+	Pause 
+	Goto MM
+End
+
+Lbl CC
+
+ClrHome
+
+
+0->A // n
+0->B // k
+0->C // x_2bar
+
+0->D // ss_tr
+0->E // ss_e
+0->F // ss_total
+
+0->G // df_tr
+0->H // df_e
+0->L // df_total
+
+0->M // ms_tr
+0->N // ms_e
+0->O // F
+
+0->P // p-value
+
+
+//Q
+//R
+//S
+
+
+
+dim(L3)->B
+For(I,1,dim(L3))
+	A+L3(I)->A
+End
+
+//df shinanigans
+B-1->G
+A-B->H
+A-1->L
+
+
+For(I,1,dim(L1))
+
+	//x_2bar+=group.size*group.mean;
+	C+L3(I)*L1(I)->C
+	
+	//ss_tr+=group.size*group.mean*group.mean;
+	D+L3(I)*L1(I)*L1(I)->D
+	
+	//ss_e+=(group.size-1)*group.variance;
+	E+(L3(I)-1)*L2(I)->E
+
+End
+
+//x_2bar/=n;
+C/A->C
+
+//ss_tr-=(x_2bar*x_2bar*n);
+D-(C*C*A)->D
+
+//ss_total=ss_tr+ss_e;
+E+D->F
+
+//ms_tr=ss_tr/df_tr;
+D/G->M
+
+//ms_e=ss_e/df_e;
+E/H->N
+
+//f=ms_tr/ms_e;
+M/N->O
+
+//p-value
+Fcdf(O,|E99,G,H)->P
+
+//Info Gatherer
+Lbl IG
+ClrHome
+Menu("Info gatherer","counts & stuff",CS,"SS",SS,"df",DF,"MS",MS,"fisher method",FM,"p-value",VP,"exit",EX)
+
+//Counts n Stuff
+Lbl CS
+Disp "n=",A
+Disp "k=",B
+Disp "x_2bar=",C
+Pause "Press [Enter]"
+Goto IG
+
+//Sum of Square
+Lbl SS
+Disp "SS_TR=",D
+Disp "SS_E=",E
+Disp "SS_Total=",F
+Pause "Press [Enter]"
+Goto IG
+
+//Degrees of Freedom
+Lbl DF
+Disp "df_TR=",G
+Disp "df_E=",H
+Disp "df_Total=",L
+Pause "Press [Enter]"
+Goto IG
+
+//MS?
+Lbl MS
+Disp "MS_TR=",M
+Disp "MS_E=",N
+Disp "F=",O
+Pause "Press [Enter]"
+Goto IG
+
+//Fisher Method
+Lbl FM
+
+//counter
+0->T
+//max iterations
+//Dim(L1)*(Dim(L1)-1)/2->U
+
+For(I,1,dim(L1))
+	For(J,I+1,dim(L1))
+		ClrHome
+		T+1->T
+		Disp ""
+		Output(1,1,"mu")
+		Output(1,2,I)
+		Output(1,3,"&")
+		Output(1,4,"mu")
+		Output(1,5,J)
+
+
+		//difference
+		L1(I)-L1(J)->Q
+		//addend
+		X*sqrt(N*(1/L3(I)+1/L3(J)))->R
+		
+		//toString(round(Q))->Str1
+		//"+-"->Str2
+		//toString(round(R))->Str3
+		//Disp Str1+Str2+Str3
+
+		
+		Disp "min=",Q-R
+		Disp "max=",Q+R
+
+
+
+		If T=3
+		Then
+			Disp "[Enter] to exit"
+		Else
+			Disp "[Enter] for next"
+		End
+		Pause 
+		
+	End
+End
+
+Goto IG
+
+//Value P (PV is reserved)
+Lbl VP
+Disp "p=",P
+Pause "Press [Enter]"
+Goto IG
+
+
+//EXit
+Lbl EX
+ClrHome
+Disp "Exiting..."
+Stop
+
+

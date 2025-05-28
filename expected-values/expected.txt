@@ -1,0 +1,92 @@
+
+Lbl DA
+ClrHome
+Menu("Expected values","Continue",CO,"What is this?",WT,"License",LI,"Exit",EX)
+
+Lbl WT
+Disp "This program"
+Disp "calculates"
+Disp "expected values"
+Pause "press [ENTER]"
+ClrHome
+Disp "observed in [A]"
+Disp "expected in [B]"
+Pause "press [ENTER]"
+Goto DA
+
+
+Lbl LI
+Disp "Copyright (C)"
+Disp "Daren Kostov"
+Disp "GPLv3"
+Disp "ABSOLUTELY NO"
+Disp "WARRANTY"
+Pause "press [ENTER]"
+ClrHome
+Disp "https://"
+Disp "github.com/"
+Disp "DarenKostov/"
+Disp "uni-stats-stuff"
+Pause "press [ENTER]"
+Goto DA
+
+
+
+Lbl CO
+
+0->A
+0->B
+
+2->dim(|LTEMP)
+dim([A])->|LTEMP
+|LTEMP(1)->A
+|LTEMP(1)->B
+DelVar |LTEMP
+
+//A and B are cols or rows, not important which is which
+0->D
+0->E
+0->F
+
+//make [B]
+{A,B}->dim([B])
+
+//calc the total
+For(I,1,A)
+	For(J,1,B)
+		F+[A](I,J)->F
+	End
+End
+
+For(I,1,A)
+	
+	0->D
+	//Calc Row/Col total
+	For(K,1,B)
+		D+[A](I,K)->D
+	End
+	
+	For(J,1,B)
+
+		0->E	
+		//Calc Row/Col total
+		For(K,1,A)
+			E+[A](I,K)->D
+		End
+
+		(D*E)/F->[B](I,J)
+	End
+End
+
+chi^2-Test([A],[B])
+Disp "Done, check [B]"
+Stop
+
+//EXit
+Lbl EX
+ClrHome
+Disp "Exiting..."
+Stop
+
+
+
