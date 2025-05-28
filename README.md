@@ -7,9 +7,8 @@ Files can be found at `anova-calculations/`
 #### 1. Input the data
 
 To access the lists: \
-[STAT] => "Edit..."
+[STAT] => "Edit..." [^1]
 
-(if list numbers are messed up: [STAT] => "SetUpEditor")
 
 
 
@@ -51,7 +50,9 @@ To run program: \
 in the 1st menu you can get info about the program \
 After exiting said menu, the expected values should be calculated into `[B]`
 
+____
+Everything is licensed under GPLv3 and comes with ABSOLUTELY NO WARRANTY, I am not responsible if you fail a test/exam.
 
-
+[^1]: if list numbers are messed up: [STAT] => "SetUpEditor" => [ENTER]
 
 
